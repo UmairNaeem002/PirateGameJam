@@ -17,14 +17,16 @@ public class ItemSwitchingScript : MonoBehaviour
     {
         if (Input.GetAxis("Mouse ScrollWheel") > 0f) 
         {
-            if (selectedItem >= transform.childCount - 1)
+            /*if (raycas.right == true && raycas.left == true)
             {
-                selectedItem = 0;
-            }
-            else 
-            {
-                selectedItem++;
-            }
+                temp = raycas.leftHand;
+                temp.transform.position = raycas.leftHand.transform.position;
+                temp.transform.rotation = raycas.leftHand.transform.rotation;
+                raycas.rightHand = raycas.leftHand;
+                raycas.leftHand.transform.position = raycas.rightItems.transform.position;
+                raycas.leftHand.transform.rotation = raycas.rightItems.transform.rotation;
+                raycas.leftHand.transform.SetParent(raycas.rightItems);
+            }*/
         }
         if (Input.GetAxis("Mouse ScrollWheel") < 0f)
         {

@@ -9,7 +9,20 @@ public class PlayerMovementScript : MonoBehaviour
     PlayerInput playerInput;
     InputAction moveAction;
 
+    [SerializeField] private Rigidbody body;
     [SerializeField] private float speed;
+    [SerializeField] private float extraSpeed;
+    [SerializeField] private float crouchSpeed;
+    [SerializeField] private float crouchScale;
+    [SerializeField] private float playerStamina;
+    [SerializeField] private float staminaRegen;
+    [SerializeField] private float staminaDrain;
+    private float maxStamina = 100f;
+    private bool regenerating = true;
+    private bool sprinting = true;
+
+    Vector2 direction;
+    Vector3 move;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,8 +38,30 @@ public class PlayerMovementScript : MonoBehaviour
 
     private void MovePlayer()
     {
-        Vector2 direction = moveAction.ReadValue<Vector2>();
-        Vector3 move = transform.right * direction.x + transform.forward * direction.y;
-        transform.position += move * speed * Time.deltaTime;
+        if (Input.GetKey(KeyCode.LeftShift) && playerStamina > 0)
+        {
+            direction = moveAction.ReadValue<Vector2>();
+            move = transform.right * direction.x + transform.forward * direction.y;
+            transform.position += move * extraSpeed * Time.deltaTime;
+            playerStamina -= staminaDrain * Time.deltaTime;
+        }
+        else if (Input.GetKey(KeyCode.LeftControl)) 
+        {
+            direction = moveAction.ReadValue<Vector2>();
+            move = transform.right * direction.x + transform.forward * direction.y;
+            transform.localScale = new Vector3(transform.localScale.x, crouchScale, transform.localScale.z);
+            body.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+            transform.position += move * crouchSpeed * Time.deltaTime;
+        }
+        else
+        {
+            direction = moveAction.ReadValue<Vector2>();
+            move = transform.right * direction.x + transform.forward * direction.y;
+            transform.position += move * speed * Time.deltaTime;
+            if (playerStamina < maxStamina)
+            {
+                playerStamina += staminaRegen * Time.deltaTime;
+            }
+        }
     }
 }

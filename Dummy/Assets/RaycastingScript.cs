@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class RaycastingScript : MonoBehaviour
     private int currentItems;
     private bool left = false;
     private bool right = false;
+    private GameObject temp;
 
     // Start is called before the first frame update
     void Start()
@@ -55,9 +57,27 @@ public class RaycastingScript : MonoBehaviour
         {
             //Debug.Log("NOT HOT");
         }
-        if (Input.GetKeyDown(KeyCode.Q)) 
+        if (Input.GetKeyDown(KeyCode.G)) 
         {
             UnEquip();
+        }
+
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f || Input.GetAxis("Mouse ScrollWheel") < 0f)
+        {
+            if (right == true && left == true)
+            {
+                temp = leftHand;
+                temp.transform.position = leftItems.transform.position;
+                temp.transform.rotation = leftItems.transform.rotation;
+                leftHand = rightHand;
+                leftHand.transform.position = rightItems.transform.position;
+                leftHand.transform.rotation = rightItems.transform.rotation;
+                leftHand.transform.SetParent(rightItems);
+                rightHand = temp;
+                rightHand.transform.position = temp.transform.position;
+                rightHand.transform.rotation = temp.transform.rotation;
+                rightHand.transform.SetParent(leftItems);
+            }
         }
     }
 
@@ -79,9 +99,28 @@ public class RaycastingScript : MonoBehaviour
 
     private void UnEquip() 
     {
+        if (right == true && left == true)
+        {
             rightHand.transform.parent = null;
             rightHand.GetComponent<Target>().Falling();
-            switching.DefaultItem();
+            rightHand = leftHand;
+            leftHand.transform.position = rightItems.transform.position;
+            leftHand.transform.rotation = rightItems.transform.rotation;
+            leftHand.transform.SetParent(rightItems);
+            leftHand = null;
+            //leftHand.transform.parent = null;
+            left = false;
+            //switching.DefaultItem();
+            Debug.Log("UNEQUIP TOP");
+        }
+        else 
+        {
+            rightHand.transform.parent = null;
+            rightHand.GetComponent<Target>().Falling();
+            //switching.DefaultItem();
+            right = false;
+            Debug.Log("UNEQUIP BOTTOM");
+        }
             //currentItems--;
             //Debug.Log(currentItems);
     }
