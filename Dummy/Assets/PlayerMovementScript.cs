@@ -18,7 +18,8 @@ public class PlayerMovementScript : MonoBehaviour
     [SerializeField] private float staminaRegen;
     [SerializeField] private float staminaDrain;
     private float maxStamina = 100f;
-    private bool regenerating = true;
+    private float normalYScale;
+    private bool regenerating = false;
     private bool sprinting = true;
 
     Vector2 direction;
@@ -28,6 +29,19 @@ public class PlayerMovementScript : MonoBehaviour
     {
         playerInput = GetComponent<PlayerInput>();
         moveAction = playerInput.actions.FindAction("Move");
+        normalYScale = transform.localScale.y;
+    }
+
+    void Update() 
+    {
+        if (playerStamina < 0)
+        {
+            regenerating = true;
+        }
+        else if (playerStamina >= maxStamina) 
+        {
+            regenerating = false;
+        }
     }
 
     // Update is called once per frame
@@ -38,8 +52,9 @@ public class PlayerMovementScript : MonoBehaviour
 
     private void MovePlayer()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && playerStamina > 0)
+        if (Input.GetKey(KeyCode.LeftShift) && playerStamina > 0 && regenerating == false)
         {
+            transform.localScale = new Vector3(transform.localScale.x, normalYScale, transform.localScale.z);
             direction = moveAction.ReadValue<Vector2>();
             move = transform.right * direction.x + transform.forward * direction.y;
             transform.position += move * extraSpeed * Time.deltaTime;
@@ -55,6 +70,7 @@ public class PlayerMovementScript : MonoBehaviour
         }
         else
         {
+            transform.localScale = new Vector3(transform.localScale.x, normalYScale, transform.localScale.z);
             direction = moveAction.ReadValue<Vector2>();
             move = transform.right * direction.x + transform.forward * direction.y;
             transform.position += move * speed * Time.deltaTime;

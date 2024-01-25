@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class RaycastingScript : MonoBehaviour
@@ -14,6 +15,7 @@ public class RaycastingScript : MonoBehaviour
     [SerializeField] private ItemSwitchingScript switching;
     private GameObject leftHand;
     //private int maxItems = 4;
+    private float normalYScale;
     private int currentItems;
     private bool left = false;
     private bool right = false;
@@ -22,6 +24,7 @@ public class RaycastingScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        normalYScale = transform.localScale.y;
         //obj = hit.collider.gameObject;
 
     }
@@ -69,13 +72,16 @@ public class RaycastingScript : MonoBehaviour
                 temp = leftHand;
                 temp.transform.position = leftItems.transform.position;
                 temp.transform.rotation = leftItems.transform.rotation;
+                temp.transform.localScale = new Vector3(leftItems.transform.localScale.x, normalYScale, leftItems.transform.localScale.z);
                 leftHand = rightHand;
                 leftHand.transform.position = rightItems.transform.position;
                 leftHand.transform.rotation = rightItems.transform.rotation;
+                leftItems.transform.localScale = new Vector3(rightItems.transform.localScale.x, normalYScale, rightItems.transform.localScale.z);
                 leftHand.transform.SetParent(rightItems);
                 rightHand = temp;
                 rightHand.transform.position = temp.transform.position;
                 rightHand.transform.rotation = temp.transform.rotation;
+                rightItems.transform.localScale = new Vector3(temp.transform.localScale.x, normalYScale, leftItems.transform.localScale.z);
                 rightHand.transform.SetParent(leftItems);
             }
         }
@@ -86,6 +92,7 @@ public class RaycastingScript : MonoBehaviour
         collider.GetComponent<Rigidbody>().isKinematic = true;
         collider.transform.position = leftItems.transform.position;
         collider.transform.rotation = leftItems.transform.rotation;
+        collider.transform.localScale = new Vector3(leftItems.transform.localScale.x, normalYScale, leftItems.transform.localScale.z);
         collider.transform.SetParent(leftItems);
     }
 
@@ -94,6 +101,7 @@ public class RaycastingScript : MonoBehaviour
         collider.GetComponent<Rigidbody>().isKinematic = true;
         collider.transform.position = rightItems.transform.position;
         collider.transform.rotation = rightItems.transform.rotation;
+        collider.transform.localScale = new Vector3(rightItems.transform.localScale.x, normalYScale, rightItems.transform.localScale.z);
         collider.transform.SetParent(rightItems);
     }
 
@@ -106,6 +114,7 @@ public class RaycastingScript : MonoBehaviour
             rightHand = leftHand;
             leftHand.transform.position = rightItems.transform.position;
             leftHand.transform.rotation = rightItems.transform.rotation;
+            leftHand.transform.localScale = new Vector3(rightItems.transform.localScale.x, normalYScale, rightItems.transform.localScale.z);
             leftHand.transform.SetParent(rightItems);
             leftHand = null;
             //leftHand.transform.parent = null;
