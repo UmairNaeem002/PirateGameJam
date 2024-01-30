@@ -19,6 +19,7 @@ public class RaycastingScript : MonoBehaviour
     private int currentItems;
     private bool left = false;
     private bool right = false;
+    private bool maskOn = false;
     private GameObject temp;
 
     // Start is called before the first frame update
@@ -44,23 +45,23 @@ public class RaycastingScript : MonoBehaviour
                     //currentItems++;
                     Debug.Log("hit");
                     right = true;
-                    EquipRight(hit.collider);
+                    EquipRight(hit.collider.gameObject);
                 }
-                else if (right == true && left == false) 
+                else if (right == true && left == false)
                 {
                     leftHand = hit.collider.gameObject;
                     //currentItems++;
                     Debug.Log("hit");
                     left = true;
-                    EquipLeft(hit.collider);
+                    EquipLeft(hit.collider.gameObject);
                 }
             }
         }
-        else 
+        else
         {
             //Debug.Log("NOT HOT");
         }
-        if (Input.GetKeyDown(KeyCode.G)) 
+        if (Input.GetKeyDown(KeyCode.G))
         {
             UnEquip();
         }
@@ -85,9 +86,14 @@ public class RaycastingScript : MonoBehaviour
                 rightHand.transform.SetParent(leftItems);
             }
         }
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            Debug.Log("LEFT HAND: " + leftHand.name);
+            Debug.Log("RIGHT HAND: " + rightHand.name);
+        }
     }
 
-    private void EquipLeft(Collider collider) 
+    public void EquipLeft(GameObject collider)
     {
         collider.GetComponent<Rigidbody>().isKinematic = true;
         collider.transform.position = leftItems.transform.position;
@@ -96,7 +102,7 @@ public class RaycastingScript : MonoBehaviour
         collider.transform.SetParent(leftItems);
     }
 
-    private void EquipRight(Collider collider)
+    public void EquipRight(GameObject collider)
     {
         collider.GetComponent<Rigidbody>().isKinematic = true;
         collider.transform.position = rightItems.transform.position;
@@ -105,7 +111,7 @@ public class RaycastingScript : MonoBehaviour
         collider.transform.SetParent(rightItems);
     }
 
-    private void UnEquip() 
+    public void UnEquip()
     {
         if (right == true && left == true)
         {
@@ -122,7 +128,7 @@ public class RaycastingScript : MonoBehaviour
             //switching.DefaultItem();
             Debug.Log("UNEQUIP TOP");
         }
-        else 
+        else
         {
             rightHand.transform.parent = null;
             rightHand.GetComponent<Target>().Falling();
@@ -130,12 +136,41 @@ public class RaycastingScript : MonoBehaviour
             right = false;
             Debug.Log("UNEQUIP BOTTOM");
         }
-            //currentItems--;
-            //Debug.Log(currentItems);
+        //currentItems--;
+        //Debug.Log(currentItems);
     }
 
     public void SetItemInHand(GameObject obj)
     {
         obj = rightHand;
+    }
+
+    public (GameObject, GameObject) GetInHandItems()
+    {
+        //leftHandItem = leftHand;
+        //rightHandItem = rightHand;
+        return (leftHand, rightHand);
+    }
+
+    public void DestroyObjects()
+    {
+        Destroy(leftHand.gameObject);
+        Destroy(rightHand.gameObject);
+        left = false;
+    }
+
+    public void DestroyLeft() 
+    {
+
+    }
+
+    public void DestroyRight() 
+    {
+
+    }
+
+    public bool IsWearingMask() 
+    {
+        return maskOn;
     }
 }
