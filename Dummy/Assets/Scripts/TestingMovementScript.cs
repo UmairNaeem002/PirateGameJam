@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
 
-public class PlayerMovementScript : MonoBehaviour
+public class TestingMovementScript : MonoBehaviour
 {
 
     PlayerInput playerInput;
@@ -23,7 +23,7 @@ public class PlayerMovementScript : MonoBehaviour
     [SerializeField] private Transform right;
     private float normalYScale;
     private bool regenerating = false;
-    private bool sprinting = true;
+    //private bool sprinting = true;
 
     Vector2 direction;
     Vector3 move;
@@ -58,7 +58,7 @@ public class PlayerMovementScript : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.LeftShift) && playerStamina > 0 && regenerating == false)
         {
-            transform.localScale = new Vector3(transform.localScale.x, normalYScale, transform.localScale.z);
+            //transform.localScale = new Vector3(transform.localScale.x, normalYScale, transform.localScale.z);
             direction = moveAction.ReadValue<Vector2>();
             move = transform.right * direction.x + transform.forward * direction.y;
             transform.position += move * extraSpeed * Time.deltaTime;
@@ -69,13 +69,15 @@ public class PlayerMovementScript : MonoBehaviour
         {
             direction = moveAction.ReadValue<Vector2>();
             move = transform.right * direction.x + transform.forward * direction.y;
-            transform.localScale = new Vector3(transform.localScale.x, crouchScale, transform.localScale.z);
+            //transform.localScale = new Vector3(transform.localScale.x, crouchScale, transform.localScale.z);
+            //left.transform.localScale = new Vector3(transform.localScale.x, normalYScale, transform.localScale.z);
+            //right.transform.localScale = new Vector3(transform.localScale.x, normalYScale, transform.localScale.z);
             body.AddForce(Vector3.down * 5f, ForceMode.Impulse);
             transform.position += move * crouchSpeed * Time.deltaTime;
         }
         else
         {
-            transform.localScale = new Vector3(transform.localScale.x, normalYScale, transform.localScale.z);
+            //transform.localScale = new Vector3(transform.localScale.x, normalYScale, transform.localScale.z);
             direction = moveAction.ReadValue<Vector2>();
             move = transform.right * direction.x + transform.forward * direction.y;
             transform.position += move * speed * Time.deltaTime;

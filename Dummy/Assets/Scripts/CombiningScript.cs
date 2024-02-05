@@ -32,6 +32,7 @@ public class CombiningScript : MonoBehaviour
     private Vector3 positionOfNewObject;
     private GameObject leftHand;
     private GameObject rightHand;
+    [SerializeField] private GameObject nothing;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,9 +46,9 @@ public class CombiningScript : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.P))
             {
                 (leftHand, rightHand) = raycast.GetInHandItems();
-                if(leftHand == null) 
+                if (leftHand == null) 
                 {
-                    leftHand = new GameObject();
+                    leftHand = nothing;
                 }
                 Debug.Log("COMBINE LEFT HAND: " + leftHand.name);
                 Debug.Log("COMBINE RIGHT HAND: " + rightHand.name);
@@ -123,15 +124,15 @@ public class CombiningScript : MonoBehaviour
                         raycast.DestroyRight();
                     }
                 }
-                else if (leftHand.name == "SEGS" || rightHand.name == "SEGS")
+                else if (leftHand.name == "SEG(Clone)" || rightHand.name == "SEG(Clone)")
                 {
                     infectionScript.DiseasesGreen.Remove("ChestGreen");
                     infectionScript.DiseasesGreen.Remove("LegsGreen");
-                    if (leftHand.name == "SEGS")
+                    if (leftHand.name == "SEG(Clone)")
                     {
                         raycast.DestroyLeft();
                     }
-                    else if (rightHand.name == "SEGS")
+                    else if (rightHand.name == "SEG(Clone)")
                     {
                         raycast.DestroyRight();
                     }
@@ -222,6 +223,7 @@ public class CombiningScript : MonoBehaviour
             {
                 raycast.DestroyObjects();
                 GameObject instantiatedSEG = Instantiate(SEG, positionOfNewObject, Quaternion.identity);
+                instantiatedSEG.AddComponent<Rigidbody>();
                 instantiatedSEG.AddComponent<Target>();
                 raycast.EquipRight(instantiatedSEG);
             }
@@ -246,6 +248,7 @@ public class CombiningScript : MonoBehaviour
             {
                 raycast.DestroyObjects();
                 GameObject instantiatedSEG = Instantiate(SEG, positionOfNewObject, Quaternion.identity);
+                instantiatedSEG.AddComponent<Rigidbody>();
                 instantiatedSEG.AddComponent<Target>();
                 raycast.EquipRight(instantiatedSEG);
             }

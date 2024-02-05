@@ -13,12 +13,13 @@ public class Target : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        GetComponent<Transform>().localScale = Vector3.one;
     }
 
     public void Falling() 
     {
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z - 45);
         GetComponent<Rigidbody>().isKinematic = false;
+        transform.localScale = Vector3.one;
     }
 }

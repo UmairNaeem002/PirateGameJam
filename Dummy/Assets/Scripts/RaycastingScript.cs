@@ -13,6 +13,7 @@ public class RaycastingScript : MonoBehaviour
     [SerializeField] private Transform leftItems;
     [SerializeField] private Transform rightItems;
     [SerializeField] private ItemSwitchingScript switching;
+    [SerializeField] private CombiningScript combining;
     private GameObject leftHand;
     //private int maxItems = 4;
     private float normalYScale;
@@ -20,6 +21,9 @@ public class RaycastingScript : MonoBehaviour
     private bool left = false;
     private bool right = false;
     private bool maskOn = false;
+    private bool card1 = false;
+    private bool card2 = false;
+    private bool card3 = false;
     private GameObject temp;
 
     // Start is called before the first frame update
@@ -43,7 +47,7 @@ public class RaycastingScript : MonoBehaviour
                 {
                     rightHand = hit.collider.gameObject;
                     //currentItems++;
-                    Debug.Log("hit");
+                    //Debug.Log("hit");
                     right = true;
                     EquipRight(hit.collider.gameObject);
                 }
@@ -51,10 +55,27 @@ public class RaycastingScript : MonoBehaviour
                 {
                     leftHand = hit.collider.gameObject;
                     //currentItems++;
-                    Debug.Log("hit");
+                    //Debug.Log("hit");
                     left = true;
                     EquipLeft(hit.collider.gameObject);
                 }
+            }
+
+            else if (hit.collider.gameObject.tag == "Podium" && Input.GetKeyDown(KeyCode.C))
+            {
+                combining.Combining();
+            }
+            else if (hit.collider.gameObject.tag == "Door1" && card1 == true && Input.GetKeyDown(KeyCode.E))  
+            {
+                hit.collider.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+            }
+            else if (hit.collider.gameObject.tag == "Door2" && card2 == true && Input.GetKeyDown(KeyCode.E))
+            {
+                hit.collider.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+            }
+            else if (hit.collider.gameObject.tag == "Door3" && card3 == true && Input.GetKeyDown(KeyCode.E))
+            {
+                hit.collider.gameObject.GetComponent<Rigidbody>().isKinematic = false;
             }
         }
         else
@@ -100,6 +121,7 @@ public class RaycastingScript : MonoBehaviour
         collider.transform.rotation = leftItems.transform.rotation;
         collider.transform.localScale = new Vector3(leftItems.transform.localScale.x, normalYScale, leftItems.transform.localScale.z);
         collider.transform.SetParent(leftItems);
+        leftHand = collider;
     }
 
     public void EquipRight(GameObject collider)
@@ -109,6 +131,7 @@ public class RaycastingScript : MonoBehaviour
         collider.transform.rotation = rightItems.transform.rotation;
         collider.transform.localScale = new Vector3(rightItems.transform.localScale.x, normalYScale, rightItems.transform.localScale.z);
         collider.transform.SetParent(rightItems);
+        rightHand = collider;
     }
 
     public void UnEquip()
@@ -161,12 +184,14 @@ public class RaycastingScript : MonoBehaviour
 
     public void DestroyLeft() 
     {
-
+        Destroy(leftHand.gameObject);
+        left = false;
     }
 
     public void DestroyRight() 
     {
-
+        Destroy(rightHand.gameObject);
+        right = false;
     }
 
     public bool IsWearingMask() 
