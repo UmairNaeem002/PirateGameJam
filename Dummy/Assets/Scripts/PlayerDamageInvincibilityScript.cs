@@ -6,7 +6,7 @@ public class PlayerDamageInvincibilityScript : MonoBehaviour
 {
 
     [SerializeField] private float invincibilityDuration;
-    [SerializeField]private InvincibilityScript invincibilityScript;
+    [SerializeField] private InvincibilityScript invincibilityScript;
     // Start is called before the first frame update
     void Start()
     {
