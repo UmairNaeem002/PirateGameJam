@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RaycastingScript : MonoBehaviour
 {
@@ -14,6 +15,12 @@ public class RaycastingScript : MonoBehaviour
     [SerializeField] private Transform rightItems;
     [SerializeField] private ItemSwitchingScript switching;
     [SerializeField] private CombiningScript combining;
+    [SerializeField] private GameObject InvCanvas;
+    [SerializeField] private GameObject Inv1;
+    [SerializeField] private GameObject Inv2;
+    [SerializeField] private GameObject Inv3;
+    [SerializeField] private GameObject Inv4;
+    [SerializeField] private Sprite sprite;
     private GameObject leftHand;
     //private int maxItems = 4;
     private float normalYScale;
@@ -25,6 +32,11 @@ public class RaycastingScript : MonoBehaviour
     private bool card2 = false;
     private bool card3 = false;
     private GameObject temp;
+    private bool inventoryBool = false;
+    private GameObject inventory1;
+    private GameObject inventory2;
+    private GameObject inventory3;
+    private GameObject inventory4;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +49,19 @@ public class RaycastingScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.I)) 
+        {
+            if (inventoryBool == false)
+            {
+                InvCanvas.SetActive(true);
+                inventoryBool = true;
+            }
+            else 
+            {
+                InvCanvas.SetActive(false);
+                inventoryBool = false;
+            }
+        }
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, rayDistance))
@@ -58,6 +83,14 @@ public class RaycastingScript : MonoBehaviour
                     //Debug.Log("hit");
                     left = true;
                     EquipLeft(hit.collider.gameObject);
+                }
+                else if (right == true && left == true)
+                {
+                    inventory1 = hit.collider.gameObject;
+                    Inv1.GetComponent<Image>().enabled = true;
+                    Inv1.GetComponent<Image>().sprite = sprite; 
+                    //left = true;
+                    //EquipLeft(hit.collider.gameObject);
                 }
             }
 
@@ -197,5 +230,10 @@ public class RaycastingScript : MonoBehaviour
     public bool IsWearingMask() 
     {
         return maskOn;
+    }
+
+    public void InventoryLeft() 
+    {
+
     }
 }
